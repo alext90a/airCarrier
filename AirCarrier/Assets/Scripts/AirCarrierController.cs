@@ -4,8 +4,9 @@ using System.Collections;
 public class AirCarrierController : MonoBehaviour {
 
 
+
     [SerializeField]
-    Rigidbody mRigidbody = null;
+    AircarrierGUI mGui = null;
 
     float mCurSpeed = 0f;
     float mCurRotation = 0f;
@@ -65,5 +66,8 @@ public class AirCarrierController : MonoBehaviour {
 
         transform.Rotate(new Vector3(0f, mCurRotation * Time.deltaTime, 0f));
         transform.position += transform.forward * mCurSpeed * Time.deltaTime;
+
+        mGui.updatedSpeed(mCurSpeed, mCurSpeed);
+        mGui.updateRotaiton(mCurRotation);
 	}
 }

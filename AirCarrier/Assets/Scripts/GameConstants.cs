@@ -10,4 +10,7 @@ public class GameConstants
     public static float kCarrierMaxRoationSpeed = 45;
     public static float kCarrierRotationStepSpeed = 15;
 
+
+    public static float kTimeBetweenAircaftLaunch = 5f;
+
 }
