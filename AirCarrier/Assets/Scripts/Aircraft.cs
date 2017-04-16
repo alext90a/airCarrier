@@ -30,22 +30,10 @@ public class Aircraft : MonoBehaviour {
             transform.position = Vector3.MoveTowards(transform.position, mCurTargetPos, mSpeed * Time.deltaTime);
             if(transform.position == mCurTargetPos)
             {
-                transform.forward = mCurTargetPoint.getDir();
+                transform.forward = (mCurTargetPoint.getNext().transform.position - transform.position).normalized;
                 mCurTargetPoint = mCurTargetPoint.getNext();
                 mCurTargetPos = mCurTargetPoint.transform.position;
             }
-            /*
-            mTimeSinceTargetDefine += Time.deltaTime;
-            float delta = mTimeSinceTargetDefine / mTimeToTarget;
-            transform.position = Vector3.Lerp(mCurStartPos, mCurTargetPos, mTimeSinceTargetDefine / mTimeToTarget);
-            if(delta>=1f)
-            {
-                mCurStartPos = transform.position;
-                mCurTargetPoint = mCurTargetPoint.getNext();
-                mCurTargetPos = mCurTargetPoint.transform.position;
-                defineTimeToTarget();
-                mTimeSinceTargetDefine = 0f;
-            }*/
 
             mTimeSinceFlyStart += Time.deltaTime;
             mAircraftGui.updateFlytime(GameConstants.kAircraftFlytime - mTimeSinceFlyStart, GameConstants.kAircraftFlytime);
@@ -58,6 +46,7 @@ public class Aircraft : MonoBehaviour {
                     mAirport.occupyLandingLane();
                     mLandingTrajectory = mAirport.getLandingTajectory();
                     mCurTargetPoint = mLandingTrajectory.getPoint(0);
+                    transform.forward = (mCurTargetPoint.transform.position - transform.position).normalized;
                 }
             }
         }
@@ -67,7 +56,10 @@ public class Aircraft : MonoBehaviour {
             transform.position = Vector3.MoveTowards(transform.position, mCurTargetPoint.transform.position, mSpeed * Time.deltaTime);
             if(transform.position == mCurTargetPoint.transform.position)
             {
-                transform.forward = mCurTargetPoint.getDir();
+                if(mCurTargetPoint.getNext()!= null)
+                {
+                    transform.forward = (mCurTargetPoint.getNext().transform.position - transform.position).normalized;
+                }
                 mCurTargetPoint = mCurTargetPoint.getNext();
                 if(mCurTargetPoint == null)
                 {
