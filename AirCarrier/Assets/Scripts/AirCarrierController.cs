@@ -9,6 +9,7 @@ public class AirCarrierController : MonoBehaviour {
     AircarrierGUI mGui = null;
 
     float mCurSpeed = 0f;
+    float mCurTargetSpeed = 0f;
     float mCurRotation = 0f;
     Vector3 mCurPowerDir = new Vector3();
 	// Use this for initialization
@@ -22,28 +23,45 @@ public class AirCarrierController : MonoBehaviour {
 
         if(Input.GetKeyDown(KeyCode.W))
         {
-            mCurSpeed += GameConstants.kCarrierIncreaseStepSpeed;
-            if(mCurSpeed > GameConstants.kCarrierMaxForwardSpeed)
+            mCurTargetSpeed += GameConstants.kCarrierIncreaseStepSpeed;
+            if(mCurTargetSpeed > GameConstants.kCarrierMaxForwardSpeed)
             {
-                mCurSpeed = GameConstants.kCarrierMaxForwardSpeed;
+                mCurTargetSpeed = GameConstants.kCarrierMaxForwardSpeed;
             }
         }
 
         if(Input.GetKeyDown(KeyCode.S))
         {
-            mCurSpeed -= GameConstants.kCarrierIncreaseStepSpeed;
-            if(mCurSpeed < GameConstants.kCarrierMaxBackwardSpeed)
+            mCurTargetSpeed -= GameConstants.kCarrierIncreaseStepSpeed;
+            if(mCurTargetSpeed < GameConstants.kCarrierMaxBackwardSpeed)
             {
-                mCurSpeed = GameConstants.kCarrierMaxBackwardSpeed;
+                mCurTargetSpeed = GameConstants.kCarrierMaxBackwardSpeed;
             }
         }
+        if(Mathf.Abs(mCurTargetSpeed - mCurSpeed) > 0.005)
+        {
+            if (mCurSpeed < mCurTargetSpeed)
+            {
+                mCurSpeed += GameConstants.kAircraftAcceleration * Time.deltaTime;
+            }
+            else
+            {
+                mCurSpeed -= GameConstants.kAircraftAcceleration * Time.deltaTime;
+            }
+                
+        }
+        else
+        {
+            mCurSpeed = mCurTargetSpeed;
+        }
 
-        if(Mathf.Abs(mCurSpeed)<0.5f)
+
+        if (Mathf.Abs(mCurSpeed) < Mathf.Epsilon)
         {
             mCurSpeed = 0f;
         }
 
-        if(Input.GetKeyDown(KeyCode.A))
+        if (Input.GetKeyDown(KeyCode.A))
         {
             mCurRotation -= GameConstants.kCarrierRotationStepSpeed;
             if(mCurRotation < -GameConstants.kCarrierMaxRoationSpeed)
@@ -59,7 +77,7 @@ public class AirCarrierController : MonoBehaviour {
                 mCurRotation = GameConstants.kCarrierMaxRoationSpeed;
             }
         }
-        if(Mathf.Abs(mCurRotation) < 0.5f)
+        if(Mathf.Abs(mCurRotation) < Mathf.Epsilon)
         {
             mCurRotation = 0f;
         }
@@ -67,7 +85,7 @@ public class AirCarrierController : MonoBehaviour {
         transform.Rotate(new Vector3(0f, mCurRotation * Time.deltaTime, 0f));
         transform.position += transform.forward * mCurSpeed * Time.deltaTime;
 
-        mGui.updatedSpeed(mCurSpeed, mCurSpeed);
+        mGui.updatedSpeed(mCurSpeed, mCurTargetSpeed);
         mGui.updateRotaiton(mCurRotation);
 	}
 }
