@@ -6,16 +6,21 @@ public class Airport : MonoBehaviour {
     [SerializeField]
     Trajectory mPatrolTrajectory;
     [SerializeField]
+    Trajectory mLandingTrajectory;
+    [SerializeField]
     Transform mRunawayStart;
     [SerializeField]
     Transform mRunawayEnd;
     [SerializeField]
     Aircraft[] mAircrafts;
+    [SerializeField]
+    AircraftGUI mAirportGUI;
 
     LinkedList<Aircraft> mAvailableAircrafts = new LinkedList<Aircraft>();
     float mTimeSinceLastLaunch = GameConstants.kTimeBetweenAircaftLaunch;
     Aircraft mCurAircraftOnRunaway = null;
     float mTimeSinceAirOnRunaway = 0f;
+    bool mIsLandingLaneAvailable = true;
 	// Use this for initialization
 	void Start ()
     {
@@ -27,7 +32,10 @@ public class Airport : MonoBehaviour {
                 continue;
             }
             mAvailableAircrafts.AddLast(mAircrafts[i]);
+            mAircrafts[i].setAircraftGui(mAirportGUI.getNextInfoGui());
         }
+
+        mAirportGUI.setAvailableAircraft(mAvailableAircrafts.Count);
 	}
 
     // Update is called once per frame
@@ -38,6 +46,7 @@ public class Airport : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.H))
         {
             launchAircraft();
+            mAirportGUI.setAvailableAircraft(mAvailableAircrafts.Count);
         }
 
 
@@ -81,5 +90,28 @@ public class Airport : MonoBehaviour {
         
     }
 
+    public bool isLandingAvailable()
+    {
+        return mIsLandingLaneAvailable;
+    }
+
+    public void occupyLandingLane()
+    {
+        mIsLandingLaneAvailable = false;
+    }
+
+    public void landAircraft(Aircraft aircraft)
+    {
+        mIsLandingLaneAvailable = true;
+        aircraft.transform.parent = null;
+        aircraft.transform.parent = transform;
+        mAvailableAircrafts.AddFirst(aircraft);
+        mAirportGUI.setAvailableAircraft(mAvailableAircrafts.Count);
+    }
+
+    public Trajectory getLandingTajectory()
+    {
+        return mLandingTrajectory;
+    }
 
 }

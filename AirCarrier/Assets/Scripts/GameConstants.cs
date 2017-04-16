@@ -12,5 +12,6 @@ public class GameConstants
 
 
     public static float kTimeBetweenAircaftLaunch = 5f;
+    public static float kAircraftFlytime = 10f;
 
 }

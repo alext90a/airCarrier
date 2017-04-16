@@ -7,19 +7,23 @@ public class Trajectory : MonoBehaviour {
     [SerializeField]
     TrajectoryPoint[] mPoints;
     [SerializeField]
-    LineRenderer mLineRenderer;
-
-    public Material mat;
+    bool mIsLoop;
+    int mSegmentCount = 0;
     private void Awake()
     {
         List<Vector3> postions = new List<Vector3>();
         for(int i=0; i<mPoints.Length; ++i)
         {
-            mPoints[i].Next = mPoints[(i + 1) % mPoints.Length];
+            mPoints[i].setNext(mPoints[(i + 1) % mPoints.Length]);
             postions.Add(mPoints[i].transform.position);
+           
         }
-        mLineRenderer.SetVertexCount(mPoints.Length);
-        mLineRenderer.SetPositions(postions.ToArray());
+        mSegmentCount = mPoints.Length;
+        if(mIsLoop == false)
+        {
+            mPoints[mPoints.Length - 1].setNext(null);
+            mSegmentCount -= 1;
+        }
     }
 	// Use this for initialization
 	void Start () {
@@ -66,8 +70,13 @@ public class Trajectory : MonoBehaviour {
         GL.PushMatrix();
         GL.Begin(GL.LINES);
         GL.Color(Color.red);
+        mSegmentCount = mPoints.Length;
+        if(!mIsLoop)
+        {
+            mSegmentCount = mPoints.Length - 1;
+        }
         
-        for (int i = 0; i < mPoints.Length; ++i)
+        for (int i = 0; i < mSegmentCount; ++i)
         {
             //Debug.DrawLine(mPoints[i].transform.position, mPoints[(i + 1) % mPoints.Length].transform.position, Color.red, 0f, false);
             GL.Vertex3(mPoints[i].transform.position.x, mPoints[i].transform.position.y, mPoints[i].transform.position.z);

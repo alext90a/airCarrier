@@ -69,6 +69,7 @@
     <Compile Include="Assets\Scripts\GameConstants.cs" />
     <Compile Include="Assets\Scripts\GuiController\AircarrierGUI.cs" />
     <Compile Include="Assets\Scripts\GuiController\AircraftGUI.cs" />
+    <Compile Include="Assets\Scripts\GuiController\AircraftInfoGUI.cs" />
     <Compile Include="Assets\Scripts\Trajectory.cs" />
     <Compile Include="Assets\Scripts\TrajectoryPoint.cs" />
   </ItemGroup>

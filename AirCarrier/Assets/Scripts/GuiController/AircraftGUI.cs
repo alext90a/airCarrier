@@ -1,8 +1,15 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public class AircraftGUI : MonoBehaviour {
 
+    [SerializeField]
+    Text mAvailableAircraftText = null;
+    [SerializeField]
+    AircraftInfoGUI[] mAircraftInfo;
+
+    int mNextInfoInd = 0;
 	// Use this for initialization
 	void Start () {
 	
@@ -12,4 +19,16 @@ public class AircraftGUI : MonoBehaviour {
 	void Update () {
 	
 	}
+
+    public AircraftInfoGUI getNextInfoGui()
+    {
+        AircraftInfoGUI guiInfo = mAircraftInfo[mNextInfoInd];
+        ++mNextInfoInd;
+        return guiInfo;
+    }
+
+    public void setAvailableAircraft(int amount)
+    {
+        mAvailableAircraftText.text = amount.ToString();
+    }
 }
