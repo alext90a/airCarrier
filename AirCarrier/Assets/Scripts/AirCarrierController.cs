@@ -35,11 +35,11 @@ public class AirCarrierController : MonoBehaviour {
         {
             if (mCurSpeed < mCurTargetSpeed)
             {
-                mCurSpeed += GameConstants.kAircraftAcceleration * Time.deltaTime;
+                mCurSpeed += GameConstants.kAircarrierAcceleration * Time.deltaTime;
             }
             else
             {
-                mCurSpeed -= GameConstants.kAircraftAcceleration * Time.deltaTime;
+                mCurSpeed -= GameConstants.kAircarrierAcceleration * Time.deltaTime;
             }
                 
         }

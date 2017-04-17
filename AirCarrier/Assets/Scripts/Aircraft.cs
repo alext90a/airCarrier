@@ -14,7 +14,8 @@ public class Aircraft : MonoBehaviour {
     Vector3 mCurStartPos = new Vector3();
     float mTimeToTarget = 0f;
     float mTimeSinceTargetDefine = 0f;
-    float mSpeed = 2f;
+    float mCurSpeed = 0f;
+    float mTargetSpeed = 2f;
     float mTimeSinceFlyStart = 0f;
 
     Trajectory mLandingTrajectory;
@@ -27,12 +28,21 @@ public class Aircraft : MonoBehaviour {
 	void Update () {
         if (mIsOnFly)
         {
-            transform.position = Vector3.MoveTowards(transform.position, mCurTargetPos, mSpeed * Time.deltaTime);
+            if(mCurSpeed < mTargetSpeed)
+            {
+                mCurSpeed += GameConstants.kAircraftAcceleration * Time.deltaTime;
+            }
+            else
+            {
+                mCurSpeed -= GameConstants.kAircraftAcceleration * Time.deltaTime;
+            }
+            transform.position = Vector3.MoveTowards(transform.position, mCurTargetPos, mCurSpeed * Time.deltaTime);
             if(transform.position == mCurTargetPos)
             {
                 transform.forward = (mCurTargetPoint.getNext().transform.position - transform.position).normalized;
                 mCurTargetPoint = mCurTargetPoint.getNext();
                 mCurTargetPos = mCurTargetPoint.transform.position;
+                mTargetSpeed = mCurTargetPoint.getSpeed();
             }
 
             mTimeSinceFlyStart += Time.deltaTime;
@@ -53,7 +63,7 @@ public class Aircraft : MonoBehaviour {
 
         if(mIsOnLanding)
         {
-            transform.position = Vector3.MoveTowards(transform.position, mCurTargetPoint.transform.position, mSpeed * Time.deltaTime);
+            transform.position = Vector3.MoveTowards(transform.position, mCurTargetPoint.transform.position, mCurSpeed * Time.deltaTime);
             if(transform.position == mCurTargetPoint.transform.position)
             {
                 if(mCurTargetPoint.getNext()!= null)
@@ -69,7 +79,7 @@ public class Aircraft : MonoBehaviour {
             }
         }
 
-        mAircraftGui.updateSpeed(mSpeed);
+        mAircraftGui.updateSpeed(mCurSpeed);
 	}
 
     public void setOnFly(Airport airport, TrajectoryPoint firstPoint)
@@ -89,7 +99,7 @@ public class Aircraft : MonoBehaviour {
 
     void defineTimeToTarget()
     {
-        mTimeToTarget = (mCurTargetPoint.transform.position - transform.position).magnitude / mSpeed;
+        mTimeToTarget = (mCurTargetPoint.transform.position - transform.position).magnitude / mCurSpeed;
     }
 
     public void setAircraftGui(AircraftInfoGUI infoGui)

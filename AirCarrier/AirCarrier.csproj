@@ -71,6 +71,7 @@
     <Compile Include="Assets\Scripts\GuiController\AircraftGUI.cs" />
     <Compile Include="Assets\Scripts\GuiController\AircraftInfoGUI.cs" />
     <Compile Include="Assets\Scripts\Trajectory.cs" />
+    <Compile Include="Assets\Scripts\TrajectoryEditor.cs" />
     <Compile Include="Assets\Scripts\TrajectoryPoint.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

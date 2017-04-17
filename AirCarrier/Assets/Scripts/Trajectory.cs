@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using UnityEditor;
 
 [ExecuteInEditMode]
 public class Trajectory : MonoBehaviour {
@@ -11,6 +12,7 @@ public class Trajectory : MonoBehaviour {
     int mSegmentCount = 0;
     private void Awake()
     {
+
         List<Vector3> postions = new List<Vector3>();
         for(int i=0; i<mPoints.Length; ++i)
         {
@@ -70,11 +72,7 @@ public class Trajectory : MonoBehaviour {
         GL.PushMatrix();
         GL.Begin(GL.LINES);
         GL.Color(Color.red);
-        mSegmentCount = mPoints.Length;
-        if(!mIsLoop)
-        {
-            mSegmentCount = mPoints.Length - 1;
-        }
+
         
         for (int i = 0; i < mSegmentCount; ++i)
         {
@@ -94,5 +92,15 @@ public class Trajectory : MonoBehaviour {
     {
 
         return mPoints[index];
+    }
+
+    public void updatePoints()
+    {
+        mSegmentCount = mPoints.Length;
+        if (mIsLoop == false)
+        {
+            mPoints[mPoints.Length - 1].setNext(null);
+            mSegmentCount -= 1;
+        }
     }
 }

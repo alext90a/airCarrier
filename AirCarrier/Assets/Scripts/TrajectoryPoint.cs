@@ -3,22 +3,23 @@ using System.Collections;
 
 public class TrajectoryPoint : MonoBehaviour {
 
+    [SerializeField]
+    float mSpeed;
+
     TrajectoryPoint mNext;
     Vector3 mDir;
 
-    /*
-    public TrajectoryPoint Next
+    private void Start()
     {
-        set
+        if(mSpeed > GameConstants.kAircraftMaxSpeed)
         {
-            mNext = value;
+            mSpeed = GameConstants.kAircraftMaxSpeed;
         }
-        get
+        if(mSpeed < GameConstants.kAircraftMinSpeed)
         {
-            return mNext;
+            mSpeed = GameConstants.kAircraftMinSpeed;
         }
     }
-    */
 
     public void setNext(TrajectoryPoint nextPoint)
     {
@@ -39,5 +40,10 @@ public class TrajectoryPoint : MonoBehaviour {
     public Vector3 getDir()
     {
         return mDir;
+    }
+
+    public float getSpeed()
+    {
+        return mSpeed;
     }
 }
