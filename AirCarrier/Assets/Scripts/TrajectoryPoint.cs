@@ -9,6 +9,7 @@ public class TrajectoryPoint : MonoBehaviour {
     TrajectoryPoint mNext;
     Vector3 mDir;
 
+
     private void Start()
     {
         if(mSpeed > GameConstants.kAircraftMaxSpeed)

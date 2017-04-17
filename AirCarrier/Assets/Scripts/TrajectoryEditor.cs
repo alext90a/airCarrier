@@ -16,8 +16,9 @@ public class TrajectoryEditor : Editor
         {
 
             trajectory.updatePoints();
-            
+            UnityEditorInternal.InternalEditorUtility.RepaintAllViews();
+
         }
-        UnityEditorInternal.InternalEditorUtility.RepaintAllViews();
+        
     }
 }

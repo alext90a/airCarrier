@@ -6,26 +6,23 @@ using UnityEditor;
 public class Trajectory : MonoBehaviour {
 
     [SerializeField]
-    TrajectoryPoint[] mPoints;
+    TrajectoryPoint[] mControlPoints;
     [SerializeField]
-    bool mIsLoop;
+    bool mIsLoop = true;
+    [SerializeField]
+    TrajectoryPoint mPointInstance;
+    [SerializeField]
+    GameObject mRealTrajectroy = null;
+
     int mSegmentCount = 0;
+    List<TrajectoryPoint> mPoints = new List<TrajectoryPoint>();
+    
     private void Awake()
     {
 
-        List<Vector3> postions = new List<Vector3>();
-        for(int i=0; i<mPoints.Length; ++i)
-        {
-            mPoints[i].setNext(mPoints[(i + 1) % mPoints.Length]);
-            postions.Add(mPoints[i].transform.position);
-           
-        }
-        mSegmentCount = mPoints.Length;
-        if(mIsLoop == false)
-        {
-            mPoints[mPoints.Length - 1].setNext(null);
-            mSegmentCount -= 1;
-        }
+        updatePoints();
+        
+
     }
 	// Use this for initialization
 	void Start () {
@@ -78,10 +75,10 @@ public class Trajectory : MonoBehaviour {
         {
             //Debug.DrawLine(mPoints[i].transform.position, mPoints[(i + 1) % mPoints.Length].transform.position, Color.red, 0f, false);
             GL.Vertex3(mPoints[i].transform.position.x, mPoints[i].transform.position.y, mPoints[i].transform.position.z);
-            GL.Vertex3(mPoints[(i + 1) % mPoints.Length].transform.position.x, mPoints[(i + 1) % mPoints.Length].transform.position.y, mPoints[(i + 1) % mPoints.Length].transform.position.z);
+            GL.Vertex3(mPoints[(i + 1) % mPoints.Count].transform.position.x, mPoints[(i + 1) % mPoints.Count].transform.position.y, mPoints[(i + 1) % mPoints.Count].transform.position.z);
         }
         
-
+        
         GL.End();
         GL.PopMatrix();
     }
@@ -96,10 +93,49 @@ public class Trajectory : MonoBehaviour {
 
     public void updatePoints()
     {
-        mSegmentCount = mPoints.Length;
+        mPoints.Clear();
+        int childCount = mRealTrajectroy.transform.childCount;
+        for(int i= childCount-1; i>=0; --i)
+        {
+            GameObject.DestroyImmediate(mRealTrajectroy.transform.GetChild(i).gameObject);
+        }
+        for (int i = 0; i < mControlPoints.Length; ++i)
+        {
+            mControlPoints[i].setNext(mControlPoints[(i + 1) % mControlPoints.Length]);
+        }
+        mSegmentCount = mControlPoints.Length;
         if (mIsLoop == false)
         {
-            mPoints[mPoints.Length - 1].setNext(null);
+            mControlPoints[mControlPoints.Length - 1].setNext(null);
+            mSegmentCount -= 1;
+        }
+
+        //create real path
+        TrajectoryPoint lastCreatedPoint = null;
+        for (int i = 0; i < mControlPoints.Length; ++i)
+        {
+            TrajectoryPoint prevPoint = mControlPoints[(i + mControlPoints.Length - 1)%mControlPoints.Length];
+            if (prevPoint.getNext() == mControlPoints[i])
+            {
+                TrajectoryPoint newPoint = GameObject.Instantiate(mPointInstance, mRealTrajectroy.transform) as TrajectoryPoint;
+                newPoint.transform.position = mControlPoints[i].transform.position - prevPoint.getDir() * GameConstants.kTrajectoryRoundness;
+                mPoints.Add(newPoint);
+                TrajectoryPoint newPoint2 = GameObject.Instantiate(mPointInstance, mRealTrajectroy.transform) as TrajectoryPoint;
+                newPoint2.transform.position = mControlPoints[i].transform.position + mControlPoints[i].getDir() * GameConstants.kTrajectoryRoundness;
+                mPoints.Add(newPoint2);
+                newPoint.setNext(newPoint2);
+                lastCreatedPoint = newPoint2;
+            }
+        }
+        if (mIsLoop && mPoints.Count>0)
+        {
+            mPoints[0].setNext(lastCreatedPoint);
+        }
+
+        mSegmentCount = mPoints.Count;
+        if (mIsLoop == false)
+        {
+            mPoints[mPoints.Count - 1].setNext(null);
             mSegmentCount -= 1;
         }
     }
