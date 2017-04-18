@@ -44,15 +44,13 @@ public class TrajectoryPoint : MonoBehaviour {
         return mDir;
     }
 
+    public void setDir(Vector3 dir)
+    {
+        mDir = dir;
+    }
+
     public float getSpeed()
     {
         return mSpeed;
     }
-
-    /*
-    public List<Vector3> getDrawingPoint()
-    {
-        return mDrawingPoints;
-    }
-    */
 }

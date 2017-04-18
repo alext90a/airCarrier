@@ -19,6 +19,12 @@ public class Aircraft : MonoBehaviour {
     float mCurAngularSpeed = GameConstants.kAircraftMaxAngleSpeed;
 
     Trajectory mLandingTrajectory;
+
+    float mTimeSinceNewTrajectoryPointAdded = 0f;
+    float mMaximumTimeWithoutSpeedBreak = 1f;
+    float mMaximumTimeToPointTravel = 1f;
+    
+
 	// Use this for initialization
 	void Start () {
 	
@@ -29,6 +35,7 @@ public class Aircraft : MonoBehaviour {
         if (mIsOnFly)
         {
 
+            mTimeSinceNewTrajectoryPointAdded += Time.deltaTime;
             if(mCurSpeed < mTargetSpeed)
             {
                 mCurSpeed += GameConstants.kAircraftAcceleration * Time.deltaTime;
@@ -45,17 +52,27 @@ public class Aircraft : MonoBehaviour {
             
             if (distance <0.5f)
             {
-                //transform.forward = mCurTargetPoint.getDir();
-                mCurTargetPoint = mCurTargetPoint.getNext();
-                if(mCurTargetPoint is RotateTrajectoryPoint)
+
+                setNextTrajectoryPoint();
+
+            }
+            else
+            {
+                if (mTimeSinceNewTrajectoryPointAdded >= mMaximumTimeToPointTravel)
                 {
-                    //mCurAngularSpeed = (mCurTargetPoint as RotateTrajectoryPoint).getAngularSpeed();
-                    mCurTargetPoint = mCurTargetPoint.getNext();
+                    setNextTrajectoryPoint();
+                }
+                else if (mTimeSinceNewTrajectoryPointAdded >= mMaximumTimeWithoutSpeedBreak)
+                {
+                    mTargetSpeed = GameConstants.kAircraftMinSpeed;
                 }
             }
+
+            
+            
             
 
-            /*
+            
             mTimeSinceFlyStart += Time.deltaTime;
             mAircraftGui.updateFlytime(GameConstants.kAircraftFlytime - mTimeSinceFlyStart, GameConstants.kAircraftFlytime);
             if(mTimeSinceFlyStart > GameConstants.kAircraftFlytime)
@@ -71,7 +88,7 @@ public class Aircraft : MonoBehaviour {
                     transform.forward = (mCurTargetPoint.transform.position - transform.position).normalized;
                 }
             }
-            */
+            
         }
 
         if(mIsOnLanding)
@@ -153,5 +170,16 @@ public class Aircraft : MonoBehaviour {
 
         GL.End();
         GL.PopMatrix();
+    }
+
+    void setNextTrajectoryPoint()
+    {
+        mCurTargetPoint = mCurTargetPoint.getNext();
+
+        mTargetSpeed = mCurTargetPoint.getSpeed();
+
+        mTimeSinceNewTrajectoryPointAdded = 0f;
+        mMaximumTimeWithoutSpeedBreak = 2 * (mCurTargetPoint.transform.position - transform.position).magnitude / GameConstants.kAircraftMinSpeed;
+        mMaximumTimeToPointTravel = 2 * mMaximumTimeWithoutSpeedBreak;
     }
 }
