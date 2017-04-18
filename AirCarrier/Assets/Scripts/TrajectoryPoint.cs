@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 
 public class TrajectoryPoint : MonoBehaviour {
 
@@ -9,6 +9,7 @@ public class TrajectoryPoint : MonoBehaviour {
     TrajectoryPoint mNext;
     Vector3 mDir;
 
+    List<Vector3> mDrawingPoints = new List<Vector3>();
 
     private void Start()
     {
@@ -46,5 +47,10 @@ public class TrajectoryPoint : MonoBehaviour {
     public float getSpeed()
     {
         return mSpeed;
+    }
+
+    public List<Vector3> getDrawingPoint()
+    {
+        return mDrawingPoints;
     }
 }
