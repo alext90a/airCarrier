@@ -28,13 +28,7 @@ public class Trajectory : MonoBehaviour {
 	// Update is called once per frame
 	void Update ()
     {
-        /*
-        for (int i = 0; i < mPoints.Length; ++i)
-        {
-            Debug.DrawLine(mPoints[i].transform.position, mPoints[(i + 1) % mPoints.Length].transform.position, Color.red, 0f, false);
-        }
-        */
-        
+
     }
     static Material lineMaterial;
     static void CreateLineMaterial()

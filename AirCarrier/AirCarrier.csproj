@@ -65,13 +65,16 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\AirCarrierController.cs" />
     <Compile Include="Assets\Scripts\Aircraft.cs" />
+    <Compile Include="Assets\Scripts\AircraftState\BaseState.cs" />
+    <Compile Include="Assets\Scripts\AircraftState\FlyState.cs" />
+    <Compile Include="Assets\Scripts\AircraftState\LandingState.cs" />
+    <Compile Include="Assets\Scripts\AircraftState\RunawayState.cs" />
     <Compile Include="Assets\Scripts\Airport.cs" />
     <Compile Include="Assets\Scripts\GameConstants.cs" />
     <Compile Include="Assets\Scripts\GuiController\AircarrierGUI.cs" />
     <Compile Include="Assets\Scripts\GuiController\AircraftGUI.cs" />
     <Compile Include="Assets\Scripts\GuiController\AircraftInfoGUI.cs" />
-    <Compile Include="Assets\Scripts\PrefabController.cs" />
-    <Compile Include="Assets\Scripts\RotateTrajectoryPoint.cs" />
+    <Compile Include="Assets\Scripts\LineRender.cs" />
     <Compile Include="Assets\Scripts\Trajectory.cs" />
     <Compile Include="Assets\Scripts\TrajectoryEditor.cs" />
     <Compile Include="Assets\Scripts\TrajectoryPoint.cs" />
