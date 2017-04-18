@@ -73,16 +73,13 @@ public class Trajectory : MonoBehaviour {
         GL.Color(Color.red);
 
         
-        for (int i = 0; i < mSegmentCount; ++i)
+        for (int i = 0; i < mPoints.Count; ++i)
         {
             List<Vector3> drawingPoints =  mPoints[i].getDrawingPoint();
             for(int j=0; j<drawingPoints.Count; ++j)
             {
                 GL.Vertex3(drawingPoints[j].x, drawingPoints[j].y, drawingPoints[j].z);
             }
-            //GL.Vertex3(mPoints[i].transform.localPosition.x, mPoints[i].transform.localPosition.y, mPoints[i].transform.localPosition.z);
-            //Vector3 endPoint = mPoints[(i + 1) % mPoints.Count].getDrawingPoint()[0];
-            //GL.Vertex3(endPoint.x, endPoint.y, endPoint.z);
         }
         
         
@@ -124,7 +121,7 @@ public class Trajectory : MonoBehaviour {
         {
             TrajectoryPoint prevPoint = mControlPoints[(i + mControlPoints.Length - 1)%mControlPoints.Length];
             TrajectoryPoint curPoint = mControlPoints[i];
-            if (prevPoint.getNext() == mControlPoints[i])
+            if (prevPoint.getNext() == mControlPoints[i] && mControlPoints[i].getNext()!=null)
             {
                 float radius = 1f;
                 float angle = Vector2.Angle(new Vector2((-1f * prevPoint.getDir()).x, (-1f * prevPoint.getDir()).z),
@@ -171,6 +168,10 @@ public class Trajectory : MonoBehaviour {
                     //mPoints.Add(endPoint);
                     startPoint.setNext(rotationPoint);
                     rotationPoint.setNext(endPoint);
+                    if(lastCreatedPoint != null)
+                    {
+                        lastCreatedPoint.setNext(startPoint);
+                    }
                     lastCreatedPoint = endPoint;
                     //endPoint.getDrawingPoint().Add(endPoint.transform.localPosition);
                 }
@@ -184,16 +185,23 @@ public class Trajectory : MonoBehaviour {
             }
             else
             {
-                TrajectoryPoint newPoint = GameObject.Instantiate(mPointInstance, mRealTrajectroy.transform) as TrajectoryPoint;
+                TrajectoryPoint newPoint = PrefabController.getInstance().createTrajectoryPoint();
+                newPoint.transform.parent = mRealTrajectroy.transform;
                 newPoint.transform.position = mControlPoints[i].transform.position;
-                //newPoint.getDrawingPoint().Add(newPoint.transform.localPosition);
+                if(lastCreatedPoint!=null)
+                {
+                    newPoint.getDrawingPoint().Add(lastCreatedPoint.transform.localPosition);
+                    newPoint.getDrawingPoint().Add(newPoint.transform.localPosition);
+                    lastCreatedPoint.setNext(newPoint);
+                }
                 mPoints.Add(newPoint);
+                lastCreatedPoint = newPoint;
             }
         }
 
         if (mIsLoop && mPoints.Count>0)
         {
-            mPoints[0].setNext(lastCreatedPoint);
+            lastCreatedPoint.setNext(mPoints[0]);
             mPoints[0].getDrawingPoint().Add(lastCreatedPoint.transform.localPosition);
             mPoints[0].getDrawingPoint().Add(mPoints[0].transform.localPosition);
         }

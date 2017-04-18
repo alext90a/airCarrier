@@ -5,7 +5,7 @@ public class TrajectoryPoint : MonoBehaviour {
 
     [SerializeField]
     float mSpeed;
-
+    [SerializeField]
     TrajectoryPoint mNext;
     Vector3 mDir;
 
