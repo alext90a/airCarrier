@@ -4,19 +4,19 @@ using System.Collections;
 public class Aircraft : MonoBehaviour {
 
     Airport mAirport = null;
+    [SerializeField]
     TrajectoryPoint mCurTargetPoint;
     AircraftInfoGUI mAircraftGui = null;
 
     bool mIsOnFly = false;
     bool mIsOnLanding = false;
 
-    Vector3 mCurTargetPos = new Vector3();
-    Vector3 mCurStartPos = new Vector3();
-    float mTimeToTarget = 0f;
-    float mTimeSinceTargetDefine = 0f;
+
+
     float mCurSpeed = 0f;
     float mTargetSpeed = 2f;
     float mTimeSinceFlyStart = 0f;
+    float mCurAngularSpeed = GameConstants.kAircraftMaxAngleSpeed;
 
     Trajectory mLandingTrajectory;
 	// Use this for initialization
@@ -28,6 +28,7 @@ public class Aircraft : MonoBehaviour {
 	void Update () {
         if (mIsOnFly)
         {
+
             if(mCurSpeed < mTargetSpeed)
             {
                 mCurSpeed += GameConstants.kAircraftAcceleration * Time.deltaTime;
@@ -36,21 +37,32 @@ public class Aircraft : MonoBehaviour {
             {
                 mCurSpeed -= GameConstants.kAircraftAcceleration * Time.deltaTime;
             }
-            transform.position = Vector3.MoveTowards(transform.position, mCurTargetPos, mCurSpeed * Time.deltaTime);
-            if(transform.position == mCurTargetPos)
-            {
-                transform.forward = (mCurTargetPoint.getNext().transform.position - transform.position).normalized;
-                mCurTargetPoint = mCurTargetPoint.getNext();
-                mCurTargetPos = mCurTargetPoint.transform.position;
-                mTargetSpeed = mCurTargetPoint.getSpeed();
-            }
+            
+            transform.forward = Vector3.RotateTowards(transform.forward, mCurTargetPoint.transform.position - transform.position, Mathf.Deg2Rad * mCurAngularSpeed * Time.deltaTime, 0f).normalized;
 
+            transform.position = transform.position + transform.forward * mCurSpeed * Time.deltaTime;
+            float distance = (mCurTargetPoint.transform.position - transform.position).magnitude;
+            
+            if (distance <0.5f)
+            {
+                //transform.forward = mCurTargetPoint.getDir();
+                mCurTargetPoint = mCurTargetPoint.getNext();
+                if(mCurTargetPoint is RotateTrajectoryPoint)
+                {
+                    //mCurAngularSpeed = (mCurTargetPoint as RotateTrajectoryPoint).getAngularSpeed();
+                    mCurTargetPoint = mCurTargetPoint.getNext();
+                }
+            }
+            
+
+            /*
             mTimeSinceFlyStart += Time.deltaTime;
             mAircraftGui.updateFlytime(GameConstants.kAircraftFlytime - mTimeSinceFlyStart, GameConstants.kAircraftFlytime);
             if(mTimeSinceFlyStart > GameConstants.kAircraftFlytime)
             {
                 if(mAirport.isLandingAvailable())
                 {
+                    
                     mIsOnFly = false;
                     mIsOnLanding = true;
                     mAirport.occupyLandingLane();
@@ -59,6 +71,7 @@ public class Aircraft : MonoBehaviour {
                     transform.forward = (mCurTargetPoint.transform.position - transform.position).normalized;
                 }
             }
+            */
         }
 
         if(mIsOnLanding)
@@ -88,22 +101,57 @@ public class Aircraft : MonoBehaviour {
         mAirport = airport;
         mCurTargetPoint = firstPoint;
         mIsOnFly = true;
-        defineTimeToTarget();
-        mCurTargetPos = mCurTargetPoint.transform.position;
-        mCurStartPos = transform.position;
-        mTimeSinceTargetDefine = 0f;
+
         mAircraftGui.enableCameraButton(true);
         mTimeSinceFlyStart = 0f;
-        transform.forward = mCurTargetPoint.getDir();
+
     }
 
-    void defineTimeToTarget()
-    {
-        mTimeToTarget = (mCurTargetPoint.transform.position - transform.position).magnitude / mCurSpeed;
-    }
 
     public void setAircraftGui(AircraftInfoGUI infoGui)
     {
         mAircraftGui = infoGui;
+    }
+
+    static Material lineMaterial;
+    static void CreateLineMaterial()
+    {
+        if (!lineMaterial)
+        {
+            // Unity has a built-in shader that is useful for drawing
+            // simple colored things.
+            Shader shader = Shader.Find("Hidden/Internal-Colored");
+            lineMaterial = new Material(shader);
+            lineMaterial.hideFlags = HideFlags.HideAndDontSave;
+            // Turn on alpha blending
+            lineMaterial.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
+            lineMaterial.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
+            // Turn backface culling off
+            lineMaterial.SetInt("_Cull", (int)UnityEngine.Rendering.CullMode.Off);
+            // Turn off depth writes
+            lineMaterial.SetInt("_ZWrite", 0);
+        }
+    }
+
+    private void OnRenderObject()
+    {
+        if(mCurTargetPoint == null)
+        {
+            return;
+        }
+
+        CreateLineMaterial();
+        lineMaterial.SetPass(0);
+        GL.PushMatrix();
+        //GL.MultMatrix(transform.localToWorldMatrix);
+        GL.Begin(GL.LINES);
+        GL.Color(Color.green);
+
+        GL.Vertex3(transform.position.x, transform.position.y, transform.position.z);
+        GL.Vertex3(mCurTargetPoint.transform.position.x, mCurTargetPoint.transform.position.y, mCurTargetPoint.transform.position.z);
+
+
+        GL.End();
+        GL.PopMatrix();
     }
 }

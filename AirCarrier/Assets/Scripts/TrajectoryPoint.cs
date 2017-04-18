@@ -49,8 +49,10 @@ public class TrajectoryPoint : MonoBehaviour {
         return mSpeed;
     }
 
+    /*
     public List<Vector3> getDrawingPoint()
     {
         return mDrawingPoints;
     }
+    */
 }

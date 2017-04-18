@@ -13,11 +13,11 @@ public class GameConstants
 
 
     public static float kTimeBetweenAircaftLaunch = 5f;
-    public static float kAircraftFlytime = 10f;
+    public static float kAircraftFlytime = 60f;
     public static float kAircraftMinSpeed = 2f;
     public static float kAircraftMaxSpeed = 5f;
     public static float kAircraftAcceleration = 0.5f;
-    public static float kAircraftMaxAngleSpeed = 3f;
+    public static float kAircraftMaxAngleSpeed = 90f;
 
     public static float kTrajectoryRoundness = 1.0f;
 

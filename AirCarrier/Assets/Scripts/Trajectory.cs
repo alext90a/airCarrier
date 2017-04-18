@@ -18,7 +18,7 @@ public class Trajectory : MonoBehaviour {
 
     int mSegmentCount = 0;
     List<TrajectoryPoint> mPoints = new List<TrajectoryPoint>();
-    
+    List<Vector3> mTrajectoryDrawingPoints = new List<Vector3>();
     private void Awake()
     {
 
@@ -72,14 +72,17 @@ public class Trajectory : MonoBehaviour {
         GL.Begin(GL.LINES);
         GL.Color(Color.red);
 
-        
-        for (int i = 0; i < mPoints.Count; ++i)
+        /*
+        for(int i=0; i<mTrajectoryDrawingPoints.Count; ++i)
         {
-            List<Vector3> drawingPoints =  mPoints[i].getDrawingPoint();
-            for(int j=0; j<drawingPoints.Count; ++j)
-            {
-                GL.Vertex3(drawingPoints[j].x, drawingPoints[j].y, drawingPoints[j].z);
-            }
+            GL.Vertex3(mTrajectoryDrawingPoints[i].x, mTrajectoryDrawingPoints[i].y, mTrajectoryDrawingPoints[i].z);
+        }
+        */
+
+        for(int i=0; i<mPoints.Count; ++i)
+        {
+            GL.Vertex3(mPoints[i].transform.localPosition.x, mPoints[i].transform.localPosition.y, mPoints[i].transform.localPosition.z);
+            GL.Vertex3(mPoints[i].transform.localPosition.x + mPoints[i].getDir().x, mPoints[i].transform.localPosition.y + mPoints[i].getDir().y, mPoints[i].transform.localPosition.z + mPoints[i].getDir().z);
         }
         
         
@@ -115,7 +118,7 @@ public class Trajectory : MonoBehaviour {
         }
 
         //create real path
-        
+        mTrajectoryDrawingPoints.Clear();
         TrajectoryPoint lastCreatedPoint = null;
         for (int i = 0; i < mControlPoints.Length; ++i)
         {
@@ -135,8 +138,8 @@ public class Trajectory : MonoBehaviour {
                     startPoint.transform.position = curPoint.transform.position - prevPoint.getDir() * fDistance;
                     if(lastCreatedPoint != null)
                     {
-                        startPoint.getDrawingPoint().Add(lastCreatedPoint.transform.localPosition);
-                        startPoint.getDrawingPoint().Add(startPoint.transform.localPosition);
+                        mTrajectoryDrawingPoints.Add(lastCreatedPoint.transform.localPosition);
+                        mTrajectoryDrawingPoints.Add(startPoint.transform.localPosition);
                     }
 
                     mPoints.Add(startPoint);
@@ -146,7 +149,7 @@ public class Trajectory : MonoBehaviour {
                     Vector3 rotationPos = (-1f * prevPoint.getDir() + curPoint.getDir()).normalized;
                     rotationPos = rotationPos * radius / Mathf.Sin(Mathf.Deg2Rad * (angle / 2f));
                     rotationPoint.transform.position = curPoint.transform.position + rotationPos;
-                    mPoints.Add(rotationPoint);
+                    //mPoints.Add(rotationPoint);
 
                     TrajectoryPoint endPoint = PrefabController.getInstance().createTrajectoryPoint();
                     endPoint.transform.parent = mRealTrajectroy.transform;
@@ -155,18 +158,21 @@ public class Trajectory : MonoBehaviour {
                     for(int j=0; j<5; ++j)
                     {
                         float delta = (float)j / 5f;
-                        
-                        rotationPoint.getDrawingPoint().Add(rotationPoint.transform.localPosition + Vector3.Slerp(startPoint.transform.localPosition - rotationPoint.transform.localPosition,
+
+                        mTrajectoryDrawingPoints.Add(rotationPoint.transform.localPosition + Vector3.Slerp(startPoint.transform.localPosition - rotationPoint.transform.localPosition,
                             endPoint.transform.localPosition - rotationPoint.transform.localPosition, delta));
-                        
-                        rotationPoint.getDrawingPoint().Add(rotationPoint.transform.localPosition + Vector3.Slerp(startPoint.transform.localPosition - rotationPoint.transform.localPosition, 
+
+                        mTrajectoryDrawingPoints.Add(rotationPoint.transform.localPosition + Vector3.Slerp(startPoint.transform.localPosition - rotationPoint.transform.localPosition, 
                             endPoint.transform.localPosition-rotationPoint.transform.localPosition, delta+(1f)/5f));
 
                     }
                     rotationPoint.setEndTrajectoryPoint(endPoint);
+                    rotationPoint.setStartTrajectoryPoint(startPoint);
+                    rotationPoint.setRotationRadius(radius);
+                    rotationPoint.setAngularSpeed(-startPoint.getSpeed() / radius);
 
-                    //mPoints.Add(endPoint);
-                    startPoint.setNext(rotationPoint);
+                    mPoints.Add(endPoint);
+                    startPoint.setNext(endPoint);
                     rotationPoint.setNext(endPoint);
                     if(lastCreatedPoint != null)
                     {
@@ -190,8 +196,8 @@ public class Trajectory : MonoBehaviour {
                 newPoint.transform.position = mControlPoints[i].transform.position;
                 if(lastCreatedPoint!=null)
                 {
-                    newPoint.getDrawingPoint().Add(lastCreatedPoint.transform.localPosition);
-                    newPoint.getDrawingPoint().Add(newPoint.transform.localPosition);
+                    mTrajectoryDrawingPoints.Add(lastCreatedPoint.transform.localPosition);
+                    mTrajectoryDrawingPoints.Add(newPoint.transform.localPosition);
                     lastCreatedPoint.setNext(newPoint);
                 }
                 mPoints.Add(newPoint);
@@ -202,8 +208,8 @@ public class Trajectory : MonoBehaviour {
         if (mIsLoop && mPoints.Count>0)
         {
             lastCreatedPoint.setNext(mPoints[0]);
-            mPoints[0].getDrawingPoint().Add(lastCreatedPoint.transform.localPosition);
-            mPoints[0].getDrawingPoint().Add(mPoints[0].transform.localPosition);
+            mTrajectoryDrawingPoints.Add(lastCreatedPoint.transform.localPosition);
+            mTrajectoryDrawingPoints.Add(mPoints[0].transform.localPosition);
         }
 
         mSegmentCount = mPoints.Count;
