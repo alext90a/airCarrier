@@ -61,17 +61,19 @@ public class Trajectory : MonoBehaviour {
         GL.Color(Color.red);
 
         /*
-        for(int i=0; i<mTrajectoryDrawingPoints.Count; ++i)
+        for(int i=0; i< mControlPoints.Count; ++i)
         {
-            GL.Vertex3(mTrajectoryDrawingPoints[i].x, mTrajectoryDrawingPoints[i].y, mTrajectoryDrawingPoints[i].z);
+            GL.Vertex3(mControlPoints[i].x, mControlPoints[i].y, mControlPoints[i].z);
         }
         */
-
+        
+        /*
         for(int i=0; i< mControlPoints.Length; ++i)
         {
             GL.Vertex3(mControlPoints[i].transform.localPosition.x, mControlPoints[i].transform.localPosition.y, mControlPoints[i].transform.localPosition.z);
             GL.Vertex3(mControlPoints[i].transform.localPosition.x + mControlPoints[i].getDir().x, mControlPoints[i].transform.localPosition.y + mControlPoints[i].getDir().y, mControlPoints[i].transform.localPosition.z + mControlPoints[i].getDir().z);
         }
+        */
         
         
         GL.End();

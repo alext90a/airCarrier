@@ -3,7 +3,7 @@ using System.Collections;
 
 public class Aircraft : MonoBehaviour {
 
-    Airport mAirport = null;
+    
     [SerializeField]
     TrajectoryPoint mCurTargetPoint;
     [SerializeField]
@@ -21,8 +21,10 @@ public class Aircraft : MonoBehaviour {
 
     Trajectory mLandingTrajectory;
     Trajectory mRunAwayTrajecotry;
+    Trajectory mFlyTrajectory;
 
-    
+    Airport mAirport = null;
+
 
     BaseState mBaseState = new BaseState();
     FlyState mFlyState = new FlyState();
@@ -90,13 +92,21 @@ public class Aircraft : MonoBehaviour {
         mAircraftGui.updateFlytime(flyTime, GameConstants.kAircraftFlytime);
     }
 
+    public void setOnRunaway(TrajectoryPoint firstPoint, Airport airport, Trajectory flyTrajectory)
+    {
+        mCurState = mRunawayState;
+        mRunawayState.initiate(firstPoint);
+        mFlyTrajectory = flyTrajectory;
+        mAirport = airport;
+        transform.position = firstPoint.transform.position;
+        
+    }
     
-    public void setOnFly(Airport airport, TrajectoryPoint firstPoint)
+    public void setOnFly()
     {
         transform.parent = null;
-        mAirport = airport;
         mCurState = mFlyState;
-        mFlyState.initiate(firstPoint);
+        mFlyState.initiate(mFlyTrajectory.getPoint(0));
         mAircraftGui.enableCameraButton(true);
     }
     

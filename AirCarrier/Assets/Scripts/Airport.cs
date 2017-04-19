@@ -4,13 +4,12 @@ using System.Collections.Generic;
 public class Airport : MonoBehaviour {
 
     [SerializeField]
+    Trajectory mRunawayTrajectory;
+    [SerializeField]
     Trajectory mPatrolTrajectory;
     [SerializeField]
     Trajectory mLandingTrajectory;
-    [SerializeField]
-    Transform mRunawayStart;
-    [SerializeField]
-    Transform mRunawayEnd;
+    
     [SerializeField]
     Aircraft[] mAircrafts;
     [SerializeField]
@@ -18,7 +17,7 @@ public class Airport : MonoBehaviour {
 
     LinkedList<Aircraft> mAvailableAircrafts = new LinkedList<Aircraft>();
     float mTimeSinceLastLaunch = GameConstants.kTimeBetweenAircaftLaunch;
-    Aircraft mCurAircraftOnRunaway = null;
+    bool mIsAircarftOnRunaway = false;
     float mTimeSinceAirOnRunaway = 0f;
     bool mIsLandingLaneAvailable = true;
 	// Use this for initialization
@@ -50,24 +49,10 @@ public class Airport : MonoBehaviour {
         }
 
 
-        if (mCurAircraftOnRunaway != null)
-        {
-            checkRunawayAircaft();
-        }
+        mTimeSinceAirOnRunaway += Time.deltaTime;
+
     }
 
-    void checkRunawayAircaft()
-    {
-        mTimeSinceAirOnRunaway += Time.deltaTime;
-        float delta = mTimeSinceAirOnRunaway / GameConstants.kTimeBetweenAircaftLaunch;
-        if (delta >= 1f)
-        {
-            mCurAircraftOnRunaway.setOnFly(this, mPatrolTrajectory.getPoint(0));
-            mCurAircraftOnRunaway = null;
-            return;
-        }
-        mCurAircraftOnRunaway.transform.position = Vector3.Lerp(mRunawayStart.position, mRunawayEnd.position, delta);
-    }
 
 
     void launchAircraft()
@@ -85,7 +70,7 @@ public class Airport : MonoBehaviour {
         }
         mTimeSinceLastLaunch = 0f;
         mTimeSinceAirOnRunaway = 0f;
-        mCurAircraftOnRunaway = mAvailableAircrafts.First.Value;
+        mAvailableAircrafts.First.Value.setOnRunaway(mRunawayTrajectory.getPoint(0), this, mPatrolTrajectory);
         mAvailableAircrafts.RemoveFirst();
         
     }
