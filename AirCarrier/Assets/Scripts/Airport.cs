@@ -67,13 +67,13 @@ public class Airport : MonoBehaviour {
     {
         if (mAvailableAircrafts.Count == 0)
         {
-            Debug.Log("No available aircrafts");
+            mAirportGUI.setAirportMessage("No available aircrafts");
             return;
         }
 
         if (mTimeSinceLastLaunch < GameConstants.kTimeBetweenAircaftLaunch)
         {
-            Debug.Log("Previous carrier is on launch");
+            mAirportGUI.setAirportMessage("Previous carrier is on launch");
             return;
         }
         mTimeSinceLastLaunch = 0f;

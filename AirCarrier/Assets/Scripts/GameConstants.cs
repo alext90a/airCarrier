@@ -27,4 +27,6 @@ public class GameConstants
     public static string kRunawayStateName = "Runaway";
     public static string kFlyStateName = "Fly";
     public static string kLandingStateName = "Landing";
+
+    public static float kTextShowTime = 3f;
 }

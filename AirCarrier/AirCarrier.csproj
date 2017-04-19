@@ -74,6 +74,7 @@
     <Compile Include="Assets\Scripts\GuiController\AircarrierGUI.cs" />
     <Compile Include="Assets\Scripts\GuiController\AircraftGUI.cs" />
     <Compile Include="Assets\Scripts\GuiController\AircraftInfoGUI.cs" />
+    <Compile Include="Assets\Scripts\GuiController\TextTimer.cs" />
     <Compile Include="Assets\Scripts\LineRender.cs" />
     <Compile Include="Assets\Scripts\Trajectory.cs" />
     <Compile Include="Assets\Scripts\TrajectoryEditor.cs" />
