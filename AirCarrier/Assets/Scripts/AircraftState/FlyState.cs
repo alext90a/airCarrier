@@ -21,11 +21,11 @@ public class FlyState : BaseState {
         }
 
         mAircraft.transform.forward = Vector3.RotateTowards(mAircraft.transform.forward,
-            mCurTargetPoint.transform.position - mAircraft.transform.position,
+            getTargetPosWithEchelon() - mAircraft.transform.position,
             Mathf.Deg2Rad * mAircraft.getAngularSpeed() * Time.deltaTime, 0f).normalized;
 
         mAircraft.transform.position = mAircraft.transform.position + mAircraft.transform.forward * mAircraft.getCurSpeed() * Time.deltaTime;
-        float distance = (mCurTargetPoint.transform.position - mAircraft.transform.position).magnitude;
+        float distance = (getTargetPosWithEchelon() - mAircraft.transform.position).magnitude;
 
         if (distance < 0.5f)
         {
@@ -79,7 +79,14 @@ public class FlyState : BaseState {
         mAircraft.setTargetSpeed(mCurTargetPoint.getSpeed());
 
         mTimeSinceNewTrajectoryPointAdded = 0f;
-        mMaximumTimeWithoutSpeedBreak = 2 * (mCurTargetPoint.transform.position - mAircraft.transform.position).magnitude / GameConstants.kAircraftMinSpeed;
+        mMaximumTimeWithoutSpeedBreak = 2 * (getTargetPosWithEchelon() - mAircraft.transform.position).magnitude / GameConstants.kAircraftMinSpeed;
         mMaximumTimeToPointTravel = 2 * mMaximumTimeWithoutSpeedBreak;
+    }
+
+    Vector3 getTargetPosWithEchelon()
+    {
+        Vector3 targetPos = mCurTargetPoint.transform.position;
+        targetPos.y += mAircraft.getHeightEchelon();
+        return targetPos;
     }
 }

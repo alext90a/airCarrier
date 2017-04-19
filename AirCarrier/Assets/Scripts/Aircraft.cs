@@ -32,6 +32,8 @@ public class Aircraft : MonoBehaviour {
     RunawayState mRunawayState = new RunawayState();
     BaseState mCurState = null;
 
+    float mHeightEchelon = 0f;
+
     private void Awake()
     {
         mCurState = mBaseState;
@@ -105,7 +107,17 @@ public class Aircraft : MonoBehaviour {
         mFlyTrajectory = flyTrajectory;
         mAirport = airport;
         transform.position = firstPoint.transform.position;
-        
+        mAircraftGui.setStateText(GameConstants.kRunawayStateName);
+    }
+
+    public void setHeightEchelon(float heightEchelon)
+    {
+        mHeightEchelon = heightEchelon;
+    }        
+
+    public float getHeightEchelon()
+    {
+        return mHeightEchelon;
     }
     
     public void setOnFly()
@@ -114,6 +126,9 @@ public class Aircraft : MonoBehaviour {
         mCurState = mFlyState;
         mFlyState.initiate(mFlyTrajectory.getPoint(0));
         mAircraftGui.enableCameraButton(true);
+        mAircraftGui.setStateText(GameConstants.kFlyStateName);
+        mAircraftGui.showFlyProgressBar(true);
+
     }
     
     public void trySetLandingState()
@@ -125,7 +140,8 @@ public class Aircraft : MonoBehaviour {
             mAirport.occupyLandingLane();
             mLandingTrajectory = mAirport.getLandingTajectory();
             mLandingState.initiate(mLandingTrajectory.getPoint(0));
-            
+            mAircraftGui.setStateText(GameConstants.kLandingStateName);
+            mAircraftGui.showFlyProgressBar(false);
         }
         
     }
@@ -137,6 +153,7 @@ public class Aircraft : MonoBehaviour {
         mCurSpeed = 0f;
         mAirport.landAircraft(this);
         gameObject.SetActive(false);
+        mAircraftGui.setStateText(GameConstants.kLandedStateName);
     }
 
     public void setAircraftGui(AircraftInfoGUI infoGui)

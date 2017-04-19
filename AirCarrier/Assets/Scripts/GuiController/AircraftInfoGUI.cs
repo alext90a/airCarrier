@@ -14,6 +14,8 @@ public class AircraftInfoGUI : MonoBehaviour {
     Scrollbar mFlyProgressBar = null;
     [SerializeField]
     Button mCameraButton = null;
+    [SerializeField]
+    Text mStateText = null;
 
     // Use this for initialization
     void Start () {
@@ -51,5 +53,15 @@ public class AircraftInfoGUI : MonoBehaviour {
     public void setNameText(string name)
     {
         mAircraftNameText.text = name;
+    }
+
+    public void setStateText(string stateText)
+    {
+        mStateText.text = stateText;
+    }
+
+    public void showFlyProgressBar(bool show)
+    {
+        mFlyProgressBar.gameObject.SetActive(show);
     }
 }

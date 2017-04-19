@@ -12,7 +12,7 @@ public class GameConstants
     public static float kAircarrierAcceleration = 0.1f;
 
 
-    public static float kTimeBetweenAircaftLaunch = 5f;
+    public static float kTimeBetweenAircaftLaunch = 0.5f;
     public static float kAircraftFlytime = 30f;
     public static float kAircraftMinSpeed = 2f;
     public static float kAircraftMaxSpeed = 5f;
@@ -20,5 +20,11 @@ public class GameConstants
     public static float kAircraftMaxAngleSpeed = 90f;
 
     public static int kAircaftsAmount = 5;
+    public static float kEchelonDistance = 0.1f;
 
+    
+    public static string kLandedStateName = "Landed";
+    public static string kRunawayStateName = "Runaway";
+    public static string kFlyStateName = "Fly";
+    public static string kLandingStateName = "Landing";
 }

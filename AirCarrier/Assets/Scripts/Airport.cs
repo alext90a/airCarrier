@@ -28,8 +28,9 @@ public class Airport : MonoBehaviour {
         {
             Aircraft aircraft = (GameObject.Instantiate(mAircarftPrefab, transform)as GameObject).GetComponent<Aircraft>();
             aircraft.gameObject.name = mAircarftPrefab.name + " " + (i + 1).ToString();
-            
+            aircraft.setHeightEchelon(i * GameConstants.kEchelonDistance);
             mAvailableAircrafts.AddLast(aircraft);
+
         }
     }
 	// Use this for initialization
