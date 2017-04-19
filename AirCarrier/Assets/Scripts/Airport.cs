@@ -9,9 +9,10 @@ public class Airport : MonoBehaviour {
     Trajectory mPatrolTrajectory;
     [SerializeField]
     Trajectory mLandingTrajectory;
-    
     [SerializeField]
-    Aircraft[] mAircrafts;
+    GameObject mAircarftPrefab = null;
+    
+
     [SerializeField]
     AircraftGUI mAirportGUI;
 
@@ -20,18 +21,24 @@ public class Airport : MonoBehaviour {
     bool mIsAircarftOnRunaway = false;
     float mTimeSinceAirOnRunaway = 0f;
     bool mIsLandingLaneAvailable = true;
+
+    private void Awake()
+    {
+        for(int i=0; i< GameConstants.kAircaftsAmount; ++i)
+        {
+            Aircraft aircraft = (GameObject.Instantiate(mAircarftPrefab, transform)as GameObject).GetComponent<Aircraft>();
+            aircraft.gameObject.name = mAircarftPrefab.name + " " + (i + 1).ToString();
+            
+            mAvailableAircrafts.AddLast(aircraft);
+        }
+    }
 	// Use this for initialization
 	void Start ()
     {
 	
-        for(int i=0; i<mAircrafts.Length; ++i)
-        {
-            if(mAircrafts[i] == null)
-            {
-                continue;
-            }
-            mAvailableAircrafts.AddLast(mAircrafts[i]);
-            mAircrafts[i].setAircraftGui(mAirportGUI.getNextInfoGui());
+        foreach(Aircraft curAircraft in mAvailableAircrafts)
+        {            
+            curAircraft.setAircraftGui(mAirportGUI.getNextInfoGui());
         }
 
         mAirportGUI.setAvailableAircraft(mAvailableAircrafts.Count);

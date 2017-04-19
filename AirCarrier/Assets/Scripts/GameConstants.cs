@@ -19,6 +19,6 @@ public class GameConstants
     public static float kAircraftAcceleration = 0.5f;
     public static float kAircraftMaxAngleSpeed = 90f;
 
-    public static float kTrajectoryRoundness = 1.0f;
+    public static int kAircaftsAmount = 5;
 
 }

@@ -32,8 +32,8 @@ public class Aircraft : MonoBehaviour {
     RunawayState mRunawayState = new RunawayState();
     BaseState mCurState = null;
 
-	// Use this for initialization
-	void Start () {
+    private void Awake()
+    {
         mCurState = mBaseState;
         mBaseState.setData(this);
         mRunawayState.setData(this);
@@ -41,6 +41,11 @@ public class Aircraft : MonoBehaviour {
         mLandingState.setData(this);
         mLineRender.getPoints().Add(new Vector3());
         mLineRender.getPoints().Add(new Vector3());
+    }
+
+    // Use this for initialization
+    void Start () {
+        
 	}
 	
 	// Update is called once per frame
@@ -94,6 +99,7 @@ public class Aircraft : MonoBehaviour {
 
     public void setOnRunaway(TrajectoryPoint firstPoint, Airport airport, Trajectory flyTrajectory)
     {
+        gameObject.SetActive(true);
         mCurState = mRunawayState;
         mRunawayState.initiate(firstPoint);
         mFlyTrajectory = flyTrajectory;
@@ -130,11 +136,13 @@ public class Aircraft : MonoBehaviour {
         mTargetSpeed = 0f;
         mCurSpeed = 0f;
         mAirport.landAircraft(this);
+        gameObject.SetActive(false);
     }
 
     public void setAircraftGui(AircraftInfoGUI infoGui)
     {
         mAircraftGui = infoGui;
+        mAircraftGui.setNameText(name);
     }
 
     

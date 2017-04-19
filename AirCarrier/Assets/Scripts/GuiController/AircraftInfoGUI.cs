@@ -46,4 +46,10 @@ public class AircraftInfoGUI : MonoBehaviour {
     {
         mCameraButton.enabled = enable;
     }
+    
+
+    public void setNameText(string name)
+    {
+        mAircraftNameText.text = name;
+    }
 }

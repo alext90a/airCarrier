@@ -1,15 +1,30 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using System.Collections;
+using System.Collections.Generic;
 
 public class AircraftGUI : MonoBehaviour {
 
     [SerializeField]
     Text mAvailableAircraftText = null;
     [SerializeField]
-    AircraftInfoGUI[] mAircraftInfo;
+    GameObject mAircraftPanel = null;
+    [SerializeField]
+    AircraftInfoGUI mAircraftInfoPrefab = null;
+
+    List<AircraftInfoGUI> mAircraftInfo = new List<AircraftInfoGUI>();
 
     int mNextInfoInd = 0;
+
+    private void Awake()
+    {
+        for(int i=0; i<GameConstants.kAircaftsAmount; ++i)
+        {
+            AircraftInfoGUI createdGui = GameObject.Instantiate(mAircraftInfoPrefab, mAircraftPanel.transform) as AircraftInfoGUI;
+            createdGui.gameObject.SetActive(true);
+            mAircraftInfo.Add(createdGui);
+
+        }
+    }
 	// Use this for initialization
 	void Start () {
 	
