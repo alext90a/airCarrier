@@ -4,21 +4,18 @@ using System.Collections.Generic;
 public class Airport : MonoBehaviour {
 
     [SerializeField]
-    Trajectory mRunawayTrajectory;
+    Trajectory mRunawayTrajectory = null;
     [SerializeField]
-    Trajectory mPatrolTrajectory;
+    Trajectory mPatrolTrajectory = null;
     [SerializeField]
-    Trajectory mLandingTrajectory;
+    Trajectory mLandingTrajectory = null;
     [SerializeField]
     GameObject mAircarftPrefab = null;
-    
-
     [SerializeField]
-    AircraftGUI mAirportGUI;
+    AircraftGUI mAirportGUI = null;
 
     LinkedList<Aircraft> mAvailableAircrafts = new LinkedList<Aircraft>();
     float mTimeSinceLastLaunch = GameConstants.kTimeBetweenAircaftLaunch;
-    bool mIsAircarftOnRunaway = false;
     float mTimeSinceAirOnRunaway = 0f;
     bool mIsLandingLaneAvailable = true;
 
@@ -67,13 +64,13 @@ public class Airport : MonoBehaviour {
     {
         if (mAvailableAircrafts.Count == 0)
         {
-            mAirportGUI.setAirportMessage("No available aircrafts");
+            mAirportGUI.setAirportMessage(GameConstants.kNoAircraftText);
             return;
         }
 
         if (mTimeSinceLastLaunch < GameConstants.kTimeBetweenAircaftLaunch)
         {
-            mAirportGUI.setAirportMessage("Previous carrier is on launch");
+            mAirportGUI.setAirportMessage(GameConstants.kLaunchTimePeriodText);
             return;
         }
         mTimeSinceLastLaunch = 0f;

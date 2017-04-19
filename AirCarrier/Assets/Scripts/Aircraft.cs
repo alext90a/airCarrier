@@ -5,9 +5,9 @@ public class Aircraft : MonoBehaviour {
 
     
     [SerializeField]
-    TrajectoryPoint mCurTargetPoint;
+    TrajectoryPoint mCurTargetPoint = null;
     [SerializeField]
-    LineRender mLineRender;
+    LineRender mLineRender = null;
 
     AircraftInfoGUI mAircraftGui = null;
 

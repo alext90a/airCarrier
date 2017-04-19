@@ -18,4 +18,9 @@ public class BaseState
     {
         return mCurTargetPoint;
     }
+
+    public virtual void initiate(TrajectoryPoint point)
+    {
+
+    }
 }

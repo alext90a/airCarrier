@@ -60,7 +60,7 @@ public class FlyState : BaseState {
         }
     }
 
-    public void initiate(TrajectoryPoint trajectoryPoint)
+    public override void initiate(TrajectoryPoint trajectoryPoint)
     {
         mCurTargetPoint = trajectoryPoint;
         calculateTravelValues();

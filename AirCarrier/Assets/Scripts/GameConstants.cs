@@ -28,5 +28,8 @@ public class GameConstants
     public static string kFlyStateName = "Fly";
     public static string kLandingStateName = "Landing";
 
+    public static string kNoAircraftText = "No available aircrafts";
+    public static string kLaunchTimePeriodText = "Previous carrier is on launch";
+
     public static float kTextShowTime = 3f;
 }

@@ -21,7 +21,7 @@ public class RunawayState : BaseState {
         }
     }
 
-    public void initiate(TrajectoryPoint trajectoryPoint)
+    public override void initiate(TrajectoryPoint trajectoryPoint)
     {
         mCurTargetPoint = trajectoryPoint;
         mAircraft.transform.forward = (mCurTargetPoint.transform.position - mAircraft.transform.position).normalized;
