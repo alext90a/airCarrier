@@ -91,6 +91,7 @@ public class Airport : MonoBehaviour {
     public void occupyLandingLane()
     {
         mIsLandingLaneAvailable = false;
+        mAirportGUI.showLandingMessage(true);
     }
 
     public void landAircraft(Aircraft aircraft)
@@ -100,6 +101,7 @@ public class Airport : MonoBehaviour {
         aircraft.transform.parent = transform;
         mAvailableAircrafts.AddFirst(aircraft);
         mAirportGUI.setAvailableAircraft(mAvailableAircrafts.Count);
+        mAirportGUI.showLandingMessage(false);
     }
 
     public Trajectory getLandingTajectory()

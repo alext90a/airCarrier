@@ -125,7 +125,6 @@ public class Aircraft : MonoBehaviour {
         transform.parent = null;
         mCurState = mFlyState;
         mFlyState.initiate(mFlyTrajectory.getPoint(0));
-        mAircraftGui.enableCameraButton(true);
         mAircraftGui.setStateText(GameConstants.kFlyStateName);
         mAircraftGui.showFlyProgressBar(true);
 

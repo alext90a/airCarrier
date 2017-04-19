@@ -9,6 +9,8 @@ public class AircraftGUI : MonoBehaviour {
     [SerializeField]
     TextTimer mAircarrierMessageText = null;
     [SerializeField]
+    GameObject mAircraftOnLandingMessage = null;
+    [SerializeField]
     GameObject mAircraftPanel = null;
     [SerializeField]
     AircraftInfoGUI mAircraftInfoPrefab = null;
@@ -52,5 +54,10 @@ public class AircraftGUI : MonoBehaviour {
     public void setAirportMessage(string text)
     {
         mAircarrierMessageText.show(text, GameConstants.kTextShowTime);
+    }
+
+    public void showLandingMessage(bool show)
+    {
+        mAircraftOnLandingMessage.gameObject.SetActive(show);
     }
 }

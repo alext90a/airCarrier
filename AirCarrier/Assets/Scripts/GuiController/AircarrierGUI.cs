@@ -4,8 +4,7 @@ using System.Collections;
 
 public class AircarrierGUI : MonoBehaviour {
 
-    [SerializeField]
-    Button mCameraButton = null;
+
     [SerializeField]
     Image mCurForwardSpeedImage = null;
     [SerializeField]
@@ -31,8 +30,6 @@ public class AircarrierGUI : MonoBehaviour {
 	void Start () {
         mMaxForwardKoeff = mMaxForwardSpeedImage.fillAmount;
         mMaxBackwardKoeff = mMaxBackwardSpeedImage.fillAmount;
-
-        mCameraButton.onClick.AddListener(setCamera);
 	}
 	
 	// Update is called once per frame

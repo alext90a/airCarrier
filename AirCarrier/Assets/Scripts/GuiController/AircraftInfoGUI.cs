@@ -13,14 +13,11 @@ public class AircraftInfoGUI : MonoBehaviour {
     [SerializeField]
     Scrollbar mFlyProgressBar = null;
     [SerializeField]
-    Button mCameraButton = null;
-    [SerializeField]
     Text mStateText = null;
 
     // Use this for initialization
     void Start () {
-
-        mCameraButton.onClick.AddListener(onCameraButtonClicked);
+        
 	}
 	
 	// Update is called once per frame
@@ -42,13 +39,7 @@ public class AircraftInfoGUI : MonoBehaviour {
     void onCameraButtonClicked()
     {
 
-    }
-
-    public void enableCameraButton(bool enable)
-    {
-        mCameraButton.enabled = enable;
-    }
-    
+    }    
 
     public void setNameText(string name)
     {
