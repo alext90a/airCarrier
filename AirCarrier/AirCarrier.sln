@@ -1,7 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2015
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AirCarrier.Plugins", "AirCarrier.Plugins.csproj", "{E6313704-E97A-8480-CBBB-728472235ED6}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AirCarrier", "AirCarrier.csproj", "{08CD33A7-4152-766C-7F37-810A04E8D588}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AirCarrier.Editor.Plugins", "AirCarrier.Editor.Plugins.csproj", "{2450450F-37CA-E17E-1A81-852BE9262155}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -9,10 +13,18 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E6313704-E97A-8480-CBBB-728472235ED6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E6313704-E97A-8480-CBBB-728472235ED6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E6313704-E97A-8480-CBBB-728472235ED6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E6313704-E97A-8480-CBBB-728472235ED6}.Release|Any CPU.Build.0 = Release|Any CPU
 		{08CD33A7-4152-766C-7F37-810A04E8D588}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{08CD33A7-4152-766C-7F37-810A04E8D588}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{08CD33A7-4152-766C-7F37-810A04E8D588}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{08CD33A7-4152-766C-7F37-810A04E8D588}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2450450F-37CA-E17E-1A81-852BE9262155}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2450450F-37CA-E17E-1A81-852BE9262155}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2450450F-37CA-E17E-1A81-852BE9262155}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2450450F-37CA-E17E-1A81-852BE9262155}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using Zenject;
 
 public class Airport : MonoBehaviour {
 
@@ -11,8 +12,12 @@ public class Airport : MonoBehaviour {
     Trajectory mLandingTrajectory = null;
     [SerializeField]
     GameObject mAircarftPrefab = null;
+    /*
     [SerializeField]
-    AircraftGUI mAirportGUI = null;
+    AircraftGUIMono _mAirportGuiMono = null;
+    */
+
+    [Inject] private IAircraftGUI _aircraftGui;
 
     LinkedList<Aircraft> mAvailableAircrafts = new LinkedList<Aircraft>();
     float mTimeSinceLastLaunch = GameConstants.kTimeBetweenAircaftLaunch;
@@ -36,48 +41,41 @@ public class Airport : MonoBehaviour {
 	
         foreach(Aircraft curAircraft in mAvailableAircrafts)
         {            
-            curAircraft.setAircraftGui(mAirportGUI.getNextInfoGui());
+            curAircraft.setAircraftGui(_aircraftGui.getNextInfoGui());
         }
 
-        mAirportGUI.setAvailableAircraft(mAvailableAircrafts.Count);
+        _aircraftGui.setAvailableAircraft(mAvailableAircrafts.Count);
 	}
 
     // Update is called once per frame
     void Update()
     {
-
         mTimeSinceLastLaunch += Time.deltaTime;
-        if (Input.GetKeyDown(KeyCode.H))
-        {
-            launchAircraft();
-            mAirportGUI.setAvailableAircraft(mAvailableAircrafts.Count);
-        }
-
-
         mTimeSinceAirOnRunaway += Time.deltaTime;
-
     }
 
 
 
-    void launchAircraft()
+    public void launchAircraft()
     {
         if (mAvailableAircrafts.Count == 0)
         {
-            mAirportGUI.setAirportMessage(GameConstants.kNoAircraftText);
+            _aircraftGui.setAirportMessage(GameConstants.kNoAircraftText);
             return;
         }
 
         if (mTimeSinceLastLaunch < GameConstants.kTimeBetweenAircaftLaunch)
         {
-            mAirportGUI.setAirportMessage(GameConstants.kLaunchTimePeriodText);
+            _aircraftGui.setAirportMessage(GameConstants.kLaunchTimePeriodText);
             return;
         }
         mTimeSinceLastLaunch = 0f;
         mTimeSinceAirOnRunaway = 0f;
         mAvailableAircrafts.First.Value.setOnRunaway(mRunawayTrajectory.getPoint(0), this, mPatrolTrajectory);
         mAvailableAircrafts.RemoveFirst();
-        
+
+        _aircraftGui.setAvailableAircraft(mAvailableAircrafts.Count);
+
     }
 
     public bool isLandingAvailable()
@@ -88,7 +86,7 @@ public class Airport : MonoBehaviour {
     public void occupyLandingLane()
     {
         mIsLandingLaneAvailable = false;
-        mAirportGUI.showLandingMessage(true);
+        _aircraftGui.showLandingMessage(true);
     }
 
     public void landAircraft(Aircraft aircraft)
@@ -97,8 +95,8 @@ public class Airport : MonoBehaviour {
         aircraft.transform.parent = null;
         aircraft.transform.parent = transform;
         mAvailableAircrafts.AddFirst(aircraft);
-        mAirportGUI.setAvailableAircraft(mAvailableAircrafts.Count);
-        mAirportGUI.showLandingMessage(false);
+        _aircraftGui.setAvailableAircraft(mAvailableAircrafts.Count);
+        _aircraftGui.showLandingMessage(false);
     }
 
     public Trajectory getLandingTajectory()

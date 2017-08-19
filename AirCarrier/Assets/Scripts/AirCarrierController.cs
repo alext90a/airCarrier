@@ -1,13 +1,15 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
+using Zenject;
 
-public class AirCarrierController : MonoBehaviour {
+public class AirCarrierController : MonoBehaviour, IControlledUnit {
 
 
 
-    [SerializeField]
+    [Inject]
     AircarrierGUI mGui = null;
-    [SerializeField]
+    [Inject]
     Airport mAirport = null;
 
     float mCurSpeed = 0f;
@@ -22,19 +24,12 @@ public class AirCarrierController : MonoBehaviour {
     // Update is called once per frame
     void Update() {
 
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            Application.Quit();
-        }
 
-        if(mAirport.isLandingAvailable())
-        {
-            processInput();
-        }
-        else
+
+        if(!mAirport.isLandingAvailable())
         {
             mCurRotation = 0f;
-        }
+        }  
         
         if(Mathf.Abs(mCurTargetSpeed - mCurSpeed) > 0.005)
         {
@@ -72,41 +67,60 @@ public class AirCarrierController : MonoBehaviour {
         mGui.updateRotaiton(mCurRotation);
 	}
 
-    void processInput()
+    public void IncreaseSpeed()
     {
-        if (Input.GetKeyDown(KeyCode.W))
+        if (!mAirport.isLandingAvailable())
         {
-            mCurTargetSpeed += GameConstants.kCarrierIncreaseStepSpeed;
-            if (mCurTargetSpeed > GameConstants.kCarrierMaxForwardSpeed)
-            {
-                mCurTargetSpeed = GameConstants.kCarrierMaxForwardSpeed;
-            }
+            return;
         }
+        mCurTargetSpeed += GameConstants.kCarrierIncreaseStepSpeed;
+        if (mCurTargetSpeed > GameConstants.kCarrierMaxForwardSpeed)
+        {
+            mCurTargetSpeed = GameConstants.kCarrierMaxForwardSpeed;
+        }
+    }
 
-        if (Input.GetKeyDown(KeyCode.S))
+    public void DecreaseSpeed()
+    {
+        if (!mAirport.isLandingAvailable())
         {
-            mCurTargetSpeed -= GameConstants.kCarrierIncreaseStepSpeed;
-            if (mCurTargetSpeed < GameConstants.kCarrierMaxBackwardSpeed)
-            {
-                mCurTargetSpeed = GameConstants.kCarrierMaxBackwardSpeed;
-            }
+            return;
         }
+        mCurTargetSpeed -= GameConstants.kCarrierIncreaseStepSpeed;
+        if (mCurTargetSpeed < GameConstants.kCarrierMaxBackwardSpeed)
+        {
+            mCurTargetSpeed = GameConstants.kCarrierMaxBackwardSpeed;
+        }
+    }
 
-        if (Input.GetKeyDown(KeyCode.A))
+    public void RotateLeft()
+    {
+        if (!mAirport.isLandingAvailable())
         {
-            mCurRotation -= GameConstants.kCarrierRotationStepSpeed;
-            if (mCurRotation < -GameConstants.kCarrierMaxRoationSpeed)
-            {
-                mCurRotation = -GameConstants.kCarrierMaxRoationSpeed;
-            }
+            return;
         }
-        if (Input.GetKeyDown(KeyCode.D))
+        mCurRotation -= GameConstants.kCarrierRotationStepSpeed;
+        if (mCurRotation < -GameConstants.kCarrierMaxRoationSpeed)
         {
-            mCurRotation += GameConstants.kCarrierRotationStepSpeed;
-            if (mCurRotation > GameConstants.kCarrierMaxRoationSpeed)
-            {
-                mCurRotation = GameConstants.kCarrierMaxRoationSpeed;
-            }
+            mCurRotation = -GameConstants.kCarrierMaxRoationSpeed;
         }
+    }
+
+    public void RotateRight()
+    {
+        if (!mAirport.isLandingAvailable())
+        {
+            return;
+        }
+        mCurRotation += GameConstants.kCarrierRotationStepSpeed;
+        if (mCurRotation > GameConstants.kCarrierMaxRoationSpeed)
+        {
+            mCurRotation = GameConstants.kCarrierMaxRoationSpeed;
+        }
+    }
+
+    public void LaunchAircraft()
+    {
+        mAirport.launchAircraft();
     }
 }
